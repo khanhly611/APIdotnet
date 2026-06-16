@@ -1,5 +1,3 @@
-Video: https://drive.google.com/file/d/1mHmm3jtMWVk3TRbVYVhMzOKSDqe5Pdy8/view?usp=sharing
-
 ## Hướng dẫn Front-end kết nối API
 
 API được xây dựng bằng ASP.NET Core Web API.
