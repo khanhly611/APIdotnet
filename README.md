@@ -2,21 +2,96 @@ Video: https://drive.google.com/file/d/1mHmm3jtMWVk3TRbVYVhMzOKSDqe5Pdy8/view?us
 
 ## Hướng dẫn Front-end kết nối API
 
-API cung cấp endpoint:
+API được xây dựng bằng ASP.NET Core Web API.
+
+### Endpoint
 
 ```http
 POST /api/products
 ```
 
-Địa chỉ API:
+URL đầy đủ:
 
 ```http
 https://localhost:7218/api/products
 ```
 
-### Kết nối từ Web (JavaScript)
+### Dữ liệu gửi lên
 
-Sử dụng Fetch API để gửi dữ liệu JSON đến server:
+Front-end cần gửi dữ liệu ở định dạng JSON:
+
+```json
+{
+    "name": "Laptop Dell",
+    "price": 15000000
+}
+```
+
+### Header
+
+```http
+Content-Type: application/json
+```
+
+### Quy trình kết nối
+
+#### Bước 1: Người dùng nhập thông tin sản phẩm
+
+Ví dụ:
+
+* Tên sản phẩm: Laptop Dell
+* Giá sản phẩm: 15000000
+
+#### Bước 2: Front-end tạo dữ liệu JSON
+
+```json
+{
+    "name": "Laptop Dell",
+    "price": 15000000
+}
+```
+
+#### Bước 3: Front-end gửi HTTP POST request
+
+Gửi request đến:
+
+```http
+https://localhost:7218/api/products
+```
+
+#### Bước 4: API kiểm tra dữ liệu
+
+* Name bắt buộc và tối thiểu 3 ký tự.
+* Price bắt buộc và phải lớn hơn 0.
+
+#### Bước 5: API trả kết quả
+
+Nếu dữ liệu hợp lệ:
+
+```json
+{
+    "message": "Thêm sản phẩm thành công",
+    "data": {
+        "name": "Laptop Dell",
+        "price": 15000000
+    }
+}
+```
+
+Nếu dữ liệu không hợp lệ:
+
+```json
+{
+    "message": "Dữ liệu không hợp lệ",
+    "errors": {
+        "Name": [
+            "Tên sản phẩm phải có ít nhất 3 ký tự"
+        ]
+    }
+}
+```
+
+### Ví dụ kết nối bằng JavaScript
 
 ```javascript
 fetch("https://localhost:7218/api/products", {
@@ -30,41 +105,5 @@ fetch("https://localhost:7218/api/products", {
     })
 })
 .then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error(error));
+.then(data => console.log(data));
 ```
-
-### Kết nối từ Mobile (Flutter)
-
-Sử dụng package `http` để gọi API:
-
-```dart
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-Future<void> createProduct() async {
-  final response = await http.post(
-    Uri.parse('https://localhost:7218/api/products'),
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: jsonEncode({
-      'name': 'Laptop Dell',
-      'price': 15000000
-    }),
-  );
-
-  print(response.body);
-}
-```
-
-### Lưu ý
-
-* Front-end cần gửi dữ liệu ở định dạng JSON.
-* Header phải có:
-
-```http
-Content-Type: application/json
-```
-
-* Khi triển khai thực tế, thay `localhost` bằng địa chỉ IP hoặc domain của máy chủ chứa API.
